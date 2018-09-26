@@ -11,6 +11,7 @@ class MainHandler(Ui_MainWindow):
     def __init__(self, window):
         self.setupUi(window)
         super().__init__()
+        self.adbCommand=adbCommand
 
         self.boxLog.setReadOnly(True)
         boxout = self.BoxOut()
@@ -35,7 +36,7 @@ class MainHandler(Ui_MainWindow):
     class BoxOut:
         def write(self,txt):
             msg = str(txt)
-            self.boxlog.appendPlainText(msg )
+            self.boxlog.appendPlainText(msg)
         def flush(self):
             pass
     def connectPhone(self):
@@ -63,17 +64,3 @@ class MainHandler(Ui_MainWindow):
         self.file, discard=self.selectFile()
         self.fileType="."+self.file.split(".")[-1]
         print(self.file+" selected!")
-    def adbCommand(self, command):
-        si = subprocess.STARTUPINFO()
-        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        path = os.path.dirname(os.path.realpath(__file__))
-        path.replace("\\", "/")
-        osType = platform.system()
-        if osType in ["Windows","Darwin","Linux"]:
-            if osType == "Windows":
-                extension = ".exe"
-            else:
-                extension = ""
-            subp = subprocess.run([path+"/{}/platform-tools/adb{}".format(osType,extension)] + command, cwd=path, universal_newlines=True, startupinfo=si)
-        else:
-            print("Error: OS not supported")
